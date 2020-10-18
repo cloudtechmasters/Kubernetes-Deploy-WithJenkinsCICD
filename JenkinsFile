@@ -3,12 +3,12 @@ pipeline{
     stages{
         stage("SCM"){
             steps{
-                git 'https://github.com/Naresh240/RollingUpdate-Rollback-NodejsApp.git'
+                git 'https://github.com/cloudtechmasters/Kubernetes-Deploy-WithJenkinsCICD.git'
             }
         }
         stage("Docker Image"){
             steps{
-                sh "docker build -t naresh240/nodejs-cicd:v1 ."
+                sh "docker build -t cloudtechmasters/nodejs-cicd:v1 ."
             }
         }
         stage("Docker Push"){
@@ -16,7 +16,7 @@ pipeline{
                 withCredentials([usernamePassword(credentialsId: 'docker_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh "docker login -u ${username} -p ${password}"
                 }
-                sh "docker push naresh240/nodejs-cicd:v1"
+                sh "docker push cloudtechmasters/nodejs-cicd:v1"
             }
         }
         stage("Deploy"){
