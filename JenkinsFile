@@ -1,0 +1,46 @@
+pipeline{
+    agent any
+    stages{
+        stage("SCM"){
+            steps{
+                git 'https://github.com/Naresh240/RollingUpdate-Rollback-NodejsApp.git'
+            }
+        }
+        stage("Docker Image"){
+            steps{
+                sh "docker build -t naresh240/nodejs-cicd:v1 ."
+            }
+        }
+        stage("Docker Push"){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'docker_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    sh "docker login -u ${username} -p ${password}"
+                }
+                sh "docker push naresh240/nodejs-cicd:v1"
+            }
+        }
+        stage("Deploy"){
+            steps{
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_configure', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    withCredentials([kubeconfigFile(credentialsId: 'kube_config', variable: 'KUBECONFIG')]) {
+                    sh '''sudo kubectl apply -f deployment.yml 
+                          sudo kubectl apply -f service.yml
+                    '''
+                    sh "sleep 30"
+                    }
+                }
+            }
+        }
+        stage("Check Pods & Services"){
+            steps{
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_configure', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                    withCredentials([kubeconfigFile(credentialsId: 'kube_config', variable: 'KUBECONFIG')]) {
+                    sh '''sudo kubectl get pods 
+                          sudo kubectl get svc
+                    '''
+                    }
+                }
+            }
+        }
+    }
+}
