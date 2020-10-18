@@ -40,7 +40,7 @@
     - aws configure credentials
          (accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws_configure', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')
 # Add JenkinsFile Content inside pipeline section
-  ![image](https://user-images.githubusercontent.com/58024415/96358045-8a309f00-1120-11eb-93b7-bb21cc82da13.png)
+  ![image](https://user-images.githubusercontent.com/58024415/96358243-ae8d7b00-1122-11eb-89ef-f68a7bee8273.png)
 # Goto Web UI and Check output of application
    http://ad5ab72d8d77042768e8994647f637e1-1324271138.us-east-1.elb.amazonaws.com:8080/
    
