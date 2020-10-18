@@ -6,11 +6,6 @@ metadata:
     app: nodejs
 spec:
   replicas: 2
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 25%
-      maxSurge: 1
   selector:
     matchLabels:
       app: nodejs
@@ -21,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodejs-deployment
-        image: naresh240/nodejs-cicd:v1
+        image: cloudtechmasters/nodejs-cicd:v1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
